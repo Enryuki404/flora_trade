@@ -29,7 +29,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-stone-900 text-stone-300">
+      <footer className="bg-stone-900 dark:bg-[#0c0a09] text-stone-300 border-t border-transparent transition-colors duration-300" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>

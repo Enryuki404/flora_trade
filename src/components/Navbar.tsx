@@ -4,9 +4,11 @@ import Link from "next/link";
 import { categories } from "@/data/articles";
 import { waLink } from "@/lib/constants";
 import { useBrand } from "@/context/BrandContext";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Navbar() {
   const { brand, openSwitcher } = useBrand();
+  const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
   const [layananOpen, setLayananOpen] = useState(false);
   const [knowledgeOpen, setKnowledgeOpen] = useState(false);
@@ -94,7 +96,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-stone-200">
+    <header className="sticky top-0 z-50 bg-[var(--surface)]/95 backdrop-blur border-b border-[var(--border)] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo — hidden brand switcher: triple-click / long-press (hardened) */}
@@ -140,7 +142,7 @@ export default function Navbar() {
               )}
             </div>
             <div className="transition-colors duration-300 select-none" style={{ userSelect: "none" } as React.CSSProperties}>
-              <div className="font-bold text-stone-900 leading-none tracking-tight transition-colors duration-300">{brand.name}</div>
+              <div className="font-bold leading-none tracking-tight transition-colors duration-300" style={{ color: "var(--text)" }}>{brand.name}</div>
               <div className="text-[11px] tracking-[0.18em] font-semibold uppercase transition-colors duration-300" style={{ color: brand.colors.primary }}>
                 {brand.tagline}
               </div>
@@ -148,7 +150,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-stone-700">
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium transition-colors duration-300" style={{ color: "var(--muted)" }}>
             <Link href="/" className="hover:text-emerald-700 transition">Home</Link>
 
             <div className="relative" onMouseEnter={() => setLayananOpen(true)} onMouseLeave={() => setLayananOpen(false)}>
@@ -157,16 +159,16 @@ export default function Navbar() {
                 <svg className={`w-4 h-4 transition ${layananOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </button>
               {layananOpen && (
-                <div className="absolute top-full left-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-stone-100 p-2">
+                <div className="absolute top-full left-0 mt-3 w-72 rounded-2xl shadow-xl border p-2 transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
                   {[
                     { title: "Jasa Export Flora", desc: "Tanaman hias, bunga potong, benih, umbi", href: "/#layanan" },
                     { title: "Jasa Import Benih & Bibit", desc: "Izin Kementan + Karantina", href: "/#layanan" },
                     { title: "Freight Forwarding Cold Chain", desc: "Air & Reefer dengan data logger", href: "/#layanan" },
                     { title: "Konsultasi Phytosanitary", desc: "PC, KT-12, fumigasi", href: "/#layanan" },
                   ].map((i) => (
-                    <Link key={i.title} href={i.href} className="block p-3 rounded-xl hover:bg-emerald-50">
-                      <div className="font-semibold text-stone-900 text-sm">{i.title}</div>
-                      <div className="text-xs text-stone-500">{i.desc}</div>
+                    <Link key={i.title} href={i.href} className="block p-3 rounded-xl hover:opacity-80 transition" style={{ backgroundColor: "transparent" }}>
+                      <div className="font-semibold text-sm transition-colors duration-300" style={{ color: "var(--text)" }}>{i.title}</div>
+                      <div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>{i.desc}</div>
                     </Link>
                   ))}
                 </div>
@@ -179,9 +181,9 @@ export default function Navbar() {
                 <svg className={`w-4 h-4 transition ${knowledgeOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </Link>
               {knowledgeOpen && (
-                <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-stone-100 p-2">
+                <div className="absolute top-full left-0 mt-3 w-64 rounded-2xl shadow-xl border p-2 transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
                   {categories.filter((c) => c.id !== "semua").map((c) => (
-                    <Link key={c.id} href={`/pengetahuan?kategori=${c.id}`} className="block px-3 py-2 rounded-lg hover:bg-emerald-50 text-sm">{c.label}</Link>
+                    <Link key={c.id} href={`/pengetahuan?kategori=${c.id}`} className="block px-3 py-2 rounded-lg hover:opacity-80 text-sm transition-colors duration-300" style={{ color: "var(--text)" }}>{c.label}</Link>
                   ))}
                 </div>
               )}
@@ -192,6 +194,29 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
+            {/* Theme toggle — moon/sun with 300ms transition, does not interfere with easter egg */}
+            <button
+              onClick={toggle}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Light mode" : "Dark mode"}
+              className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+              style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text)" }}
+            >
+              <span className="transition-transform duration-300" style={{ transform: theme === "dark" ? "rotate(15deg)" : "rotate(0deg)" }}>
+                {theme === "dark" ? (
+                  // sun icon
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="5" />
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                  </svg>
+                ) : (
+                  // moon icon
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </span>
+            </button>
             <a
               href={waLink(`Halo ${brand.name} mau konsultasi ekspor flora`)}
               target="_blank"
@@ -205,16 +230,32 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile toggle */}
-          <button onClick={() => setOpen(!open)} className="lg:hidden p-2 rounded-lg border border-stone-200">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} /></svg>
-          </button>
+          {/* Mobile actions */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={toggle}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300"
+              style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text)" }}
+            >
+              <span className="transition-transform duration-300">
+                {theme === "dark" ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" /></svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+                )}
+              </span>
+            </button>
+            <button onClick={() => setOpen(!open)} className="p-2 rounded-lg border transition-colors duration-300" style={{ borderColor: "var(--border)", color: "var(--text)", backgroundColor: "var(--surface)" }}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} /></svg>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden border-t bg-white px-4 py-4 space-y-3">
+        <div className="lg:hidden border-t px-4 py-4 space-y-3 transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text)" }}>
           <Link href="/" onClick={() => setOpen(false)} className="block py-2 font-medium">Home</Link>
           <Link href="/#layanan" onClick={() => setOpen(false)} className="block py-2 font-medium">Layanan</Link>
           <Link href="/pengetahuan" onClick={() => setOpen(false)} className="block py-2 font-medium">Product Knowledge</Link>

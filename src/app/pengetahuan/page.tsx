@@ -41,7 +41,7 @@ function PengetahuanContent() {
   }, [search, active]);
 
   return (
-    <div className="bg-[#fefcf8] min-h-screen">
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: "var(--bg)" }}>
       {/* Hero kecil — brand-aware */}
       <section className="text-white transition-colors duration-300" style={{ backgroundColor: "var(--brand-primary)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
@@ -70,17 +70,17 @@ function PengetahuanContent() {
       {/* Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 overflow-visible">
         <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-stone-600">Menampilkan <b className="text-stone-900">{filtered.length}</b> artikel {active !== "semua" && <>di kategori <b className="transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>{categories.find(c=>c.id===active)?.label}</b></>}</div>
+          <div className="text-sm transition-colors duration-300" style={{ color: "var(--muted)" }}>Menampilkan <b style={{ color: "var(--text)" }}>{filtered.length}</b> artikel {active !== "semua" && <>di kategori <b className="transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>{categories.find(c=>c.id===active)?.label}</b></>}</div>
           <Link href="/" className="text-sm font-semibold hover:opacity-80 transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>← Kembali ke Home</Link>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="bg-white border rounded-2xl p-10 text-center text-stone-500">Tidak ada artikel ditemukan untuk “{search}”</div>
+          <div className="border rounded-2xl p-10 text-center transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--muted)" }}>Tidak ada artikel ditemukan untuk “{search}”</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-visible pt-1 pb-2">
             {filtered.map((a) => (
-              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-white rounded-[20px] border overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col" style={{ borderColor: "color-mix(in srgb, var(--brand-accent) 30%, #e7e5e4)" }}>
-                <div className="relative h-48 overflow-hidden bg-stone-100 isolate">
+              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group rounded-[20px] border overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col" style={{ backgroundColor: "var(--surface)", borderColor: "color-mix(in srgb, var(--brand-accent) 30%, var(--border))" }}>
+                <div className="relative h-48 overflow-hidden isolate" style={{ backgroundColor: "var(--border)" }}>
                   <SafeImage
                     src={a.coverImage}
                     alt={a.title}
@@ -90,11 +90,11 @@ function PengetahuanContent() {
                   <span className="absolute top-3 left-3 z-10 text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full text-white shadow-md transition-colors duration-300" style={{ backgroundColor: "var(--brand-primary)" }}>{a.category}</span>
                 </div>
                 <div className="p-5 flex flex-col flex-1">
-                  <div className="text-xs text-stone-400">{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} • {a.readingTime} • {a.author}</div>
-                  <h3 className="font-bold text-stone-900 leading-tight mt-2 line-clamp-2 transition-colors duration-300 group-hover:text-[var(--brand-primary)]">{a.title}</h3>
-                  <p className="text-sm text-stone-600 mt-2 line-clamp-2 leading-relaxed flex-1">{a.excerpt}</p>
+                  <div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} • {a.readingTime} • {a.author}</div>
+                  <h3 className="font-bold leading-tight mt-2 line-clamp-2 transition-colors duration-300 group-hover:text-[var(--brand-primary)]" style={{ color: "var(--text)" }}>{a.title}</h3>
+                  <p className="text-sm mt-2 line-clamp-2 leading-relaxed flex-1 transition-colors duration-300" style={{ color: "var(--muted)" }}>{a.excerpt}</p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
-                    {a.tags.slice(0, 3).map((t) => (<span key={t} className="text-[11px] px-2 py-1 rounded-full text-stone-600 transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)" }}>{t}</span>))}
+                    {a.tags.slice(0, 3).map((t) => (<span key={t} className="text-[11px] px-2 py-1 rounded-full transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)", color: "var(--brand-primary)" }}>{t}</span>))}
                   </div>
                   <div className="mt-4 text-sm font-semibold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Baca Selengkapnya →</div>
                 </div>
@@ -118,7 +118,7 @@ function PengetahuanContent() {
 
 export default function PengetahuanPage() {
   return (
-    <Suspense fallback={<div className="bg-[#fefcf8] min-h-screen p-10 text-center text-stone-500">Memuat...</div>}>
+    <Suspense fallback={<div className="min-h-screen p-10 text-center transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>Memuat...</div>}>
       <PengetahuanContent />
     </Suspense>
   );

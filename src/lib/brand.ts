@@ -128,6 +128,26 @@ export function getBrandStyles(brand: BrandConfig) {
   };
 }
 
+// Theme-aware CSS vars — brand primary unchanged, surface/bg/text adapt per theme
+export function getThemeCSSVars(theme: "light" | "dark"): CSSProperties {
+  if (theme === "dark") {
+    return {
+      ["--bg" as string]: "#0c0a09",
+      ["--surface" as string]: "#1c1917",
+      ["--text" as string]: "#f5f5f4",
+      ["--muted" as string]: "#a8a29e",
+      ["--border" as string]: "#292524",
+    } as CSSProperties;
+  }
+  return {
+    ["--bg" as string]: "#fefcf8",
+    ["--surface" as string]: "#ffffff",
+    ["--text" as string]: "#1c1917",
+    ["--muted" as string]: "#57534e",
+    ["--border" as string]: "#e7e5e4",
+  } as CSSProperties;
+}
+
 // Utility: hex to rgba for hero overlay
 export function hexToRgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);

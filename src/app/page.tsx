@@ -75,7 +75,7 @@ export default function Home() {
   const heroOverlay = `linear-gradient(to right, ${hexToRgba(brand.colors.primary, 0.92)}, ${hexToRgba(brand.colors.primary, 0.75)}, ${hexToRgba(brand.colors.primary, 0.38)})`;
 
   return (
-    <div className="bg-[#fefcf8]">
+    <div className="bg-[var(--bg)] transition-colors duration-300">
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
@@ -118,18 +118,18 @@ export default function Home() {
 
             {/* Hero Card — FIXED: use SafeImage with valid src + brand-aware fallback */}
             <div className="hidden lg:block">
-              <div className="bg-white rounded-[24px] shadow-2xl p-3 max-w-md ml-auto">
-                <div className="rounded-2xl overflow-hidden relative h-[300px] bg-stone-100">
+              <div className="rounded-[24px] shadow-2xl p-3 max-w-md ml-auto transition-colors duration-300" style={{ backgroundColor: "var(--surface)" }}>
+                <div className="rounded-2xl overflow-hidden relative h-[300px]" style={{ backgroundColor: "var(--border)" }}>
                   <SafeImage
                     src="https://images.unsplash.com/photo-1463936575829-25148e1db1b6?w=700&auto=format&fit=crop&q=80"
                     alt="Monstera Variegata"
                     sizes="400px"
                     className="object-cover"
                   />
-                  <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur rounded-2xl p-4 flex items-center justify-between shadow-lg">
+                  <div className="absolute bottom-3 left-3 right-3 backdrop-blur rounded-2xl p-4 flex items-center justify-between shadow-lg transition-colors duration-300" style={{ backgroundColor: "color-mix(in srgb, var(--surface) 95%, transparent)" }}>
                     <div>
-                      <div className="text-xs text-stone-500">Shipment Terbaru</div>
-                      <div className="font-bold text-stone-900 text-sm">1.200 Monstera Variegata → Amsterdam</div>
+                      <div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>Shipment Terbaru</div>
+                      <div className="font-bold text-sm transition-colors duration-300" style={{ color: "var(--text)" }}>1.200 Monstera Variegata → Amsterdam</div>
                       <div className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>● Delivered • 3 hari • 98% live arrival</div>
                     </div>
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors duration-300" style={{ backgroundColor: "var(--brand-primary)" }}>✓</div>
@@ -143,7 +143,7 @@ export default function Home() {
                   ].map((s) => (
                     <div key={s.l} className="rounded-2xl p-3 text-center transition-colors duration-300 border" style={{ backgroundColor: "var(--brand-light)", borderColor: "var(--brand-accent)" }}>
                       <div className="font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>{s.v}</div>
-                      <div className="text-[11px] text-stone-500">{s.l}</div>
+                      <div className="text-[11px] transition-colors duration-300" style={{ color: "var(--muted)" }}>{s.l}</div>
                     </div>
                   ))}
                 </div>
@@ -154,16 +154,16 @@ export default function Home() {
       </section>
 
       {/* TRUST SIGNALS */}
-      <section className="border-y border-stone-200 bg-white">
+      <section className="border-y transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-6">
-            <div className="text-xs font-bold tracking-widest text-stone-400 uppercase">Dipercaya & Terasosiasi</div>
-            <div className="flex flex-wrap items-center gap-6 text-xs font-semibold text-stone-500">
-              <span className="px-3 py-1.5 rounded-full bg-stone-50 border">ALFI/ILFA</span>
-              <span className="px-3 py-1.5 rounded-full bg-stone-50 border">IATA Cargo</span>
-              <span className="px-3 py-1.5 rounded-full bg-stone-50 border">Badan Karantina</span>
-              <span className="px-3 py-1.5 rounded-full bg-stone-50 border">CEISA 4.0</span>
-              <span className="px-3 py-1.5 rounded-full bg-stone-50 border">e-Phyto</span>
+            <div className="text-xs font-bold tracking-widest uppercase transition-colors duration-300" style={{ color: "var(--muted)" }}>Dipercaya & Terasosiasi</div>
+            <div className="flex flex-wrap items-center gap-6 text-xs font-semibold transition-colors duration-300" style={{ color: "var(--muted)" }}>
+              <span className="px-3 py-1.5 rounded-full border transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}>ALFI/ILFA</span>
+              <span className="px-3 py-1.5 rounded-full border transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}>IATA Cargo</span>
+              <span className="px-3 py-1.5 rounded-full border transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}>Badan Karantina</span>
+              <span className="px-3 py-1.5 rounded-full border transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}>CEISA 4.0</span>
+              <span className="px-3 py-1.5 rounded-full border transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)" }}>e-Phyto</span>
             </div>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
@@ -173,10 +173,10 @@ export default function Home() {
               { n: 50, label: "Negara Tujuan", sub: "EU, ME, Asia, US" },
               { n: 24, suffix: "/7", label: "Support & Tracking", sub: "Update real-time" },
             ].map((s) => (
-              <div key={s.label} className="rounded-2xl border p-6 text-center transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)", borderColor: "color-mix(in srgb, var(--brand-accent) 50%, #e7e5e4)" }}>
+              <div key={s.label} className="rounded-2xl border p-6 text-center transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)", borderColor: "color-mix(in srgb, var(--brand-accent) 50%, var(--border))" }}>
                 <div className="text-3xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}><Counter target={s.n} suffix={s.suffix || "+"} /></div>
-                <div className="font-semibold text-stone-900 text-sm mt-1">{s.label}</div>
-                <div className="text-xs text-stone-500">{s.sub}</div>
+                <div className="font-semibold text-sm mt-1 transition-colors duration-300" style={{ color: "var(--text)" }}>{s.label}</div>
+                <div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>{s.sub}</div>
               </div>
             ))}
           </div>
@@ -188,16 +188,16 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
           <div>
             <div className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Layanan Utama</div>
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-stone-900 mt-2 tracking-tight">Semua Urusan Flora,<br />Kami Bereskan.</h2>
+            <h2 className="text-3xl lg:text-4xl font-extrabold mt-2 tracking-tight transition-colors duration-300" style={{ color: "var(--text)" }}>Semua Urusan Flora,<br />Kami Bereskan.</h2>
           </div>
-          <p className="max-w-lg text-stone-600 text-sm leading-relaxed">Fokus di komoditi non-tambang — tanaman hias, bunga potong, benih, umbi & rempah. Bukan general forwarder yang coba-coba handle flora.</p>
+          <p className="max-w-lg text-sm leading-relaxed transition-colors duration-300" style={{ color: "var(--muted)" }}>Fokus di komoditi non-tambang — tanaman hias, bunga potong, benih, umbi & rempah. Bukan general forwarder yang coba-coba handle flora.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {layanan.map((l) => (
-            <div key={l.title} className={`rounded-[20px] border p-6 hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1`} style={{ backgroundColor: "#fff", borderColor: "color-mix(in srgb, var(--brand-accent) 35%, #e7e5e4)" }}>
+            <div key={l.title} className={`rounded-[20px] border p-6 hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1`} style={{ backgroundColor: "var(--surface)", borderColor: "color-mix(in srgb, var(--brand-accent) 35%, var(--border))" }}>
               <div className="w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-sm transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)", borderColor: "var(--brand-accent)" }}>{l.icon}</div>
-              <h3 className="font-bold text-stone-900 mt-4">{l.title}</h3>
-              <p className="text-sm text-stone-600 mt-2 leading-relaxed flex-1">{l.desc}</p>
+              <h3 className="font-bold mt-4 transition-colors duration-300" style={{ color: "var(--text)" }}>{l.title}</h3>
+              <p className="text-sm mt-2 leading-relaxed flex-1 transition-colors duration-300" style={{ color: "var(--muted)" }}>{l.desc}</p>
               <a href={l.href} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all duration-300" style={{ color: "var(--brand-primary)" }}>Selengkapnya →</a>
             </div>
           ))}
@@ -205,20 +205,20 @@ export default function Home() {
       </section>
 
       {/* PRODUCT KNOWLEDGE PREVIEW */}
-      <section className="bg-white border-y border-stone-200 py-16 lg:py-20 overflow-visible">
+      <section className="border-y py-16 lg:py-20 overflow-visible transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Product Knowledge Hub</div>
-              <h2 className="text-3xl font-extrabold text-stone-900 mt-2 tracking-tight">Panduan & Artikel Terbaru</h2>
-              <p className="text-sm text-stone-500 mt-2">Edukasi ekspor-impor flora — dari HS Code sampai cold chain.</p>
+              <h2 className="text-3xl font-extrabold mt-2 tracking-tight transition-colors duration-300" style={{ color: "var(--text)" }}>Panduan & Artikel Terbaru</h2>
+              <p className="text-sm mt-2 transition-colors duration-300" style={{ color: "var(--muted)" }}>Edukasi ekspor-impor flora — dari HS Code sampai cold chain.</p>
             </div>
-            <Link href="/pengetahuan" className="px-5 py-2.5 rounded-full border text-sm font-semibold hover:bg-stone-50 transition duration-300" style={{ borderColor: "var(--brand-accent)", color: "var(--brand-primary)" }}>Lihat Semua Artikel →</Link>
+            <Link href="/pengetahuan" className="px-5 py-2.5 rounded-full border text-sm font-semibold transition duration-300 hover:opacity-80" style={{ borderColor: "var(--brand-accent)", color: "var(--brand-primary)", backgroundColor: "var(--surface)" }}>Lihat Semua Artikel →</Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-visible pt-1 pb-2">
             {preview.map((a) => (
-              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-[#fefcf8] rounded-[20px] border overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col" style={{ borderColor: "color-mix(in srgb, var(--brand-accent) 30%, #e7e5e4)" }}>
-                <div className="relative h-48 overflow-hidden bg-stone-100 isolate">
+              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group rounded-[20px] border overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col" style={{ backgroundColor: "var(--bg)", borderColor: "color-mix(in srgb, var(--brand-accent) 30%, var(--border))" }}>
+                <div className="relative h-48 overflow-hidden isolate" style={{ backgroundColor: "var(--border)" }}>
                   <SafeImage
                     src={a.coverImage}
                     alt={a.title}
@@ -231,10 +231,10 @@ export default function Home() {
                 </div>
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs text-stone-400">{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })} • {a.readingTime}</span>
+                    <span className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })} • {a.readingTime}</span>
                   </div>
-                  <h3 className="font-bold text-stone-900 leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[var(--brand-primary)]">{a.title}</h3>
-                  <p className="text-sm text-stone-600 mt-2 line-clamp-2 leading-relaxed">{a.excerpt}</p>
+                  <h3 className="font-bold leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[var(--brand-primary)]" style={{ color: "var(--text)" }}>{a.title}</h3>
+                  <p className="text-sm mt-2 line-clamp-2 leading-relaxed transition-colors duration-300" style={{ color: "var(--muted)" }}>{a.excerpt}</p>
                   <div className="mt-4 text-sm font-semibold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Baca Selengkapnya →</div>
                 </div>
               </Link>
@@ -248,8 +248,8 @@ export default function Home() {
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <div className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Kenapa FloraTrade?</div>
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-stone-900 mt-2 tracking-tight leading-none">Bukan Sekadar<br />Forwarder. Kami<br /><span className="transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Ahli Flora.</span></h2>
-            <p className="text-stone-600 mt-4 leading-relaxed">Forwarder umum sering gagal di karantina karena tidak paham phytosanitary. Kami spesialis — setiap shipment didampingi agronomist & PPJK bersertifikat.</p>
+            <h2 className="text-3xl lg:text-4xl font-extrabold mt-2 tracking-tight leading-none transition-colors duration-300" style={{ color: "var(--text)" }}>Bukan Sekadar<br />Forwarder. Kami<br /><span className="transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Ahli Flora.</span></h2>
+            <p className="mt-4 leading-relaxed transition-colors duration-300" style={{ color: "var(--muted)" }}>Forwarder umum sering gagal di karantina karena tidak paham phytosanitary. Kami spesialis — setiap shipment didampingi agronomist & PPJK bersertifikat.</p>
             <div className="mt-8 grid sm:grid-cols-2 gap-5">
               {[
                 { t: "Harga Transparan", d: "Rincian jelas: freight, karantina, PEB, bea. Tanpa hidden fee. Simulasi dulu, baru jalan.", i: "💰" },
@@ -260,15 +260,15 @@ export default function Home() {
                 <div key={k.t} className="flex gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 border" style={{ backgroundColor: "var(--brand-light)", borderColor: "var(--brand-accent)" }}>{k.i}</div>
                   <div>
-                    <div className="font-bold text-stone-900 text-sm">{k.t}</div>
-                    <div className="text-xs text-stone-600 leading-relaxed mt-1">{k.d}</div>
+                    <div className="font-bold text-sm transition-colors duration-300" style={{ color: "var(--text)" }}>{k.t}</div>
+                    <div className="text-xs leading-relaxed mt-1 transition-colors duration-300" style={{ color: "var(--muted)" }}>{k.d}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
           <div className="relative">
-            <div className="relative w-full h-[480px] rounded-[24px] overflow-hidden shadow-xl bg-stone-100">
+            <div className="relative w-full h-[480px] rounded-[24px] overflow-hidden shadow-xl" style={{ backgroundColor: "var(--border)" }}>
               <Image
                 src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&auto=format&fit=crop&q=80"
                 alt="Greenhouse"
@@ -277,8 +277,8 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 -left-4 bg-white rounded-2xl shadow-xl border p-5 flex gap-4 max-w-sm">
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-stone-100">
+            <div className="absolute -bottom-6 -left-4 rounded-2xl shadow-xl border p-5 flex gap-4 max-w-sm transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0" style={{ backgroundColor: "var(--border)" }}>
                 <Image
                   src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&auto=format&fit=crop"
                   alt="flowers"
@@ -288,8 +288,8 @@ export default function Home() {
                 />
               </div>
               <div>
-                <div className="font-bold text-stone-900 text-sm">Ekspor Perdana UMKM Lolos 100%</div>
-                <div className="text-xs text-stone-600 mt-1">Ibu Sari, Bandung — 300 Aglaonema ke Dubai, tanpa reject karantina.</div>
+                <div className="font-bold text-sm transition-colors duration-300" style={{ color: "var(--text)" }}>Ekspor Perdana UMKM Lolos 100%</div>
+                <div className="text-xs mt-1 transition-colors duration-300" style={{ color: "var(--muted)" }}>Ibu Sari, Bandung — 300 Aglaonema ke Dubai, tanpa reject karantina.</div>
                 <div className="text-xs font-semibold mt-2 transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>★★★★★ 4.9/5 dari 200+ UMKM</div>
               </div>
             </div>
@@ -320,16 +320,16 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="mt-10 bg-white rounded-2xl p-6 lg:p-8 text-stone-900 flex flex-col lg:flex-row gap-6 items-center">
+          <div className="rounded-2xl p-6 lg:p-8 flex flex-col lg:flex-row gap-6 items-center transition-colors duration-300" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
             <div className="flex-1">
               <div className="text-xs font-bold tracking-widest uppercase transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>Studi Kasus</div>
               <div className="font-extrabold text-xl mt-1">Berhasil Import Benih Premium dari Thailand Tanpa Hambatan</div>
-              <p className="text-sm text-stone-600 mt-2">Klien import 500kg benih sayur hibrida. Kami urus SIP Kementan + karantina 2 hari, bea hemat 30% dengan HS yang tepat.</p>
+              <p className="text-sm mt-2 transition-colors duration-300" style={{ color: "var(--muted)" }}>Klien import 500kg benih sayur hibrida. Kami urus SIP Kementan + karantina 2 hari, bea hemat 30% dengan HS yang tepat.</p>
             </div>
             <div className="flex gap-6 text-center">
-              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>2 Hari</div><div className="text-xs text-stone-500">Clearance</div></div>
-              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>-30%</div><div className="text-xs text-stone-500">Bea Masuk</div></div>
-              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>100%</div><div className="text-xs text-stone-500">Lolos Karantina</div></div>
+              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>2 Hari</div><div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>Clearance</div></div>
+              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>-30%</div><div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>Bea Masuk</div></div>
+              <div><div className="text-2xl font-extrabold transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>100%</div><div className="text-xs transition-colors duration-300" style={{ color: "var(--muted)" }}>Lolos Karantina</div></div>
             </div>
           </div>
         </div>
@@ -339,16 +339,16 @@ export default function Home() {
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="text-center">
           <div className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300" style={{ color: "var(--brand-primary)" }}>FAQ</div>
-          <h2 className="text-3xl font-extrabold text-stone-900 mt-2 tracking-tight">Pertanyaan yang Sering Ditanya</h2>
+          <h2 className="text-3xl font-extrabold mt-2 tracking-tight transition-colors duration-300" style={{ color: "var(--text)" }}>Pertanyaan yang Sering Ditanya</h2>
         </div>
         <div className="mt-8 space-y-3">
           {faqs.map((f, i) => (
-            <div key={i} className="border border-stone-200 rounded-2xl bg-white overflow-hidden transition-colors duration-300">
+            <div key={i} className="border rounded-2xl overflow-hidden transition-colors duration-300" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
               <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
-                <span className="font-semibold text-stone-900 text-sm pr-4">{f.q}</span>
-                <span className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${openFaq === i ? "text-white" : "bg-stone-50"}`} style={openFaq === i ? { backgroundColor: "var(--brand-primary)", borderColor: "var(--brand-primary)" } : undefined}>{openFaq === i ? "−" : "+"}</span>
+                <span className="font-semibold text-sm pr-4 transition-colors duration-300" style={{ color: "var(--text)" }}>{f.q}</span>
+                <span className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${openFaq === i ? "text-white" : ""}`} style={openFaq === i ? { backgroundColor: "var(--brand-primary)", borderColor: "var(--brand-primary)" } : { backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--muted)" }}>{openFaq === i ? "−" : "+"}</span>
               </button>
-              {openFaq === i && <div className="px-5 pb-5 text-sm text-stone-600 leading-relaxed">{f.a}</div>}
+              {openFaq === i && <div className="px-5 pb-5 text-sm leading-relaxed transition-colors duration-300" style={{ color: "var(--muted)" }}>{f.a}</div>}
             </div>
           ))}
         </div>
@@ -372,33 +372,33 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[24px] p-6 lg:p-8 text-stone-900 shadow-xl">
+            <div className="rounded-[24px] p-6 lg:p-8 shadow-xl transition-colors duration-300" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
               {formStatus === "success" ? (
                 <div className="text-center py-10">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto transition-colors duration-300" style={{ backgroundColor: "var(--brand-light)", color: "var(--brand-primary)" }}>✓</div>
-                  <div className="font-extrabold text-xl mt-4">Permintaan Terkirim!</div>
-                  <p className="text-sm text-stone-600 mt-2">Tim kami akan hubungi via WhatsApp dalam 1 jam kerja. Cek WA kamu ya 🌿</p>
-                  <button onClick={() => setFormStatus("idle")} className="mt-6 px-6 py-2.5 rounded-full border font-semibold text-sm transition-colors duration-300" style={{ borderColor: "var(--brand-accent)" }}>Kirim lagi</button>
+                  <div className="font-extrabold text-xl mt-4" style={{ color: "var(--text)" }}>Permintaan Terkirim!</div>
+                  <p className="text-sm mt-2 transition-colors duration-300" style={{ color: "var(--muted)" }}>Tim kami akan hubungi via WhatsApp dalam 1 jam kerja. Cek WA kamu ya 🌿</p>
+                  <button onClick={() => setFormStatus("idle")} className="mt-6 px-6 py-2.5 rounded-full border font-semibold text-sm transition-colors duration-300" style={{ borderColor: "var(--brand-accent)", color: "var(--text)" }}>Kirim lagi</button>
                 </div>
               ) : (
                 <form onSubmit={(e) => { e.preventDefault(); setFormStatus("success"); }} className="space-y-4">
                   <div>
-                    <label className="text-xs font-semibold text-stone-700">Nama Lengkap *</label>
-                    <input required placeholder="Budi Santoso" className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
+                    <label className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--text)" }}>Nama Lengkap *</label>
+                    <input required placeholder="Budi Santoso" className="mt-1.5 w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)", ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-xs font-semibold text-stone-700">Email *</label>
-                      <input required type="email" placeholder="budi@email.com" className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
+                      <label className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--text)" }}>Email *</label>
+                      <input required type="email" placeholder="budi@email.com" className="mt-1.5 w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)", ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-stone-700">No. HP / WhatsApp *</label>
-                      <input required placeholder="0812xxxx" className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
+                      <label className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--text)" }}>No. HP / WhatsApp *</label>
+                      <input required placeholder="0812xxxx" className="mt-1.5 w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)", ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-stone-700">Jenis Kebutuhan *</label>
-                    <select required className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 bg-white transition-colors duration-300" style={{ ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties}>
+                    <label className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--text)" }}>Jenis Kebutuhan *</label>
+                    <select required className="mt-1.5 w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)", ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties}>
                       <option value="">Pilih kebutuhan</option>
                       <option>Export Flora (Tanaman Hias/Bunga)</option>
                       <option>Import Benih/Bibit</option>
@@ -407,12 +407,12 @@ export default function Home() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-stone-700">Pesan</label>
-                    <textarea rows={4} placeholder="Contoh: Mau ekspor 200 Aglaonema ke Belanda, butuh bantuan PC & freight..." className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors duration-300" style={{ ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
+                    <label className="text-xs font-semibold transition-colors duration-300" style={{ color: "var(--text)" }}>Pesan</label>
+                    <textarea rows={4} placeholder="Contoh: Mau ekspor 200 Aglaonema ke Belanda, butuh bantuan PC & freight..." className="mt-1.5 w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors duration-300" style={{ backgroundColor: "var(--bg)", borderColor: "var(--border)", color: "var(--text)", ["--tw-ring-color" as string]: "var(--brand-primary)" } as React.CSSProperties} />
                   </div>
                   <button type="submit" className="w-full py-3.5 rounded-full text-white font-bold text-sm hover:opacity-95 transition-all duration-300 shadow" style={{ backgroundColor: "var(--brand-primary)" }}>Kirim Permintaan →</button>
-                  <a href={waLink("Halo FloraTrade mau konsultasi")} target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 rounded-full border text-center font-semibold text-sm hover:bg-stone-50 transition duration-300" style={{ borderColor: "var(--brand-accent)", color: "var(--brand-primary)" }}>💬 Chat WhatsApp Langsung</a>
-                  <p className="text-[11px] text-stone-500 text-center">Dengan mengirim form, kamu setuju dengan Kebijakan Privasi kami.</p>
+                  <a href={waLink("Halo FloraTrade mau konsultasi")} target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 rounded-full border text-center font-semibold text-sm transition duration-300 hover:opacity-80" style={{ borderColor: "var(--brand-accent)", color: "var(--brand-primary)", backgroundColor: "var(--surface)" }}>💬 Chat WhatsApp Langsung</a>
+                  <p className="text-[11px] text-center transition-colors duration-300" style={{ color: "var(--muted)" }}>Dengan mengirim form, kamu setuju dengan Kebijakan Privasi kami.</p>
                 </form>
               )}
             </div>
