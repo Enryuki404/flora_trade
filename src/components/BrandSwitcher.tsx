@@ -139,9 +139,21 @@ export default function BrandSwitcher({ isOpen, onClose }: Props) {
           })}
         </div>
 
-        <div className="mt-5 flex items-center justify-between">
-          <span className="text-[11px] text-stone-400">Tip: triple-click logo atau long-press 1.2 d di Navbar.</span>
-          <span className="text-[11px] font-medium text-stone-500">{brands.findIndex((b) => b.id === brandId) + 1} / {brands.length}</span>
+        <div className="mt-5 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-stone-400">Semua trigger buka modal yang sama.</span>
+            <span className="text-[11px] font-medium text-stone-500">{brands.findIndex((b) => b.id === brandId) + 1} / {brands.length}</span>
+          </div>
+          <div className="rounded-xl bg-stone-50 border border-stone-100 px-3 py-2.5 flex flex-wrap gap-1.5 items-center text-[11px] leading-none">
+            <span className="font-bold text-stone-700 tracking-wide">Tip:</span>
+            <span className="font-mono bg-white border border-stone-200 px-1.5 py-1 rounded-md text-stone-700">Ctrl+Shift+B</span>
+            <span className="text-stone-300">·</span>
+            <span className="font-mono bg-white border border-stone-200 px-1.5 py-1 rounded-md text-stone-700">Konami ↑↑↓↓←→←→BA</span>
+            <span className="text-stone-300">·</span>
+            <span className="font-mono bg-white border border-stone-200 px-1.5 py-1 rounded-md text-stone-700">5× dot footer</span>
+            <span className="text-stone-300">·</span>
+            <span className="font-mono bg-white border border-stone-200 px-1.5 py-1 rounded-md text-stone-700">?brand=orchid</span>
+          </div>
         </div>
       </div>
 

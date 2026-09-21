@@ -1,26 +1,30 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useBrand } from "@/context/BrandContext";
-import BrandSwitcher from "@/components/BrandSwitcher";
 
 export default function Footer() {
-  const { brand } = useBrand();
-  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const { brand, openSwitcher } = useBrand();
   const dotClicks = useRef<number[]>([]);
 
-  const handleDotClick = () => {
+  const handleDotClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const now = Date.now();
     dotClicks.current = [...dotClicks.current.filter((t) => now - t < 1500), now];
     if (dotClicks.current.length >= 5) {
       dotClicks.current = [];
-      setSwitcherOpen(true);
+      openSwitcher();
       if (typeof navigator !== "undefined" && "vibrate" in navigator) {
         try {
           navigator.vibrate([20, 30, 20]);
         } catch {}
       }
     }
+  };
+
+  const handleDotClickCapture: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
   };
 
   return (
@@ -126,14 +130,17 @@ export default function Footer() {
           </div>
 
           <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between gap-3 text-xs text-stone-500">
-            <span className="select-none">
+            <span className="select-none" style={{ userSelect: "none" } as React.CSSProperties}>
               © 2026 {brand.name} {brand.tagline === "NUSANTARA" ? "Nusantara" : ""}
-              {/* hidden dot — 5x rapid click */}
+              {/* hidden dot — 5x rapid click (hardened, safe from browser) */}
               <button
                 onClick={handleDotClick}
+                onClickCapture={handleDotClickCapture}
+                onPointerDown={(e) => e.stopPropagation()}
+                onPointerDownCapture={(e) => e.stopPropagation()}
                 aria-label="hidden brand switcher"
-                className="inline-block px-0.5 -mx-0.5 cursor-default select-none focus:outline-none"
-                style={{ WebkitTapHighlightColor: "transparent" }}
+                className="inline-block px-0.5 -mx-0.5 cursor-default select-none touch-manipulation focus:outline-none"
+                style={{ WebkitTapHighlightColor: "transparent", userSelect: "none", WebkitUserSelect: "none", touchAction: "manipulation" } as React.CSSProperties}
                 title=""
               >
                 .
@@ -151,7 +158,6 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-      <BrandSwitcher isOpen={switcherOpen} onClose={() => setSwitcherOpen(false)} />
     </>
   );
 }
