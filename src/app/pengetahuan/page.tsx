@@ -1,11 +1,32 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { articles, categories } from "@/data/articles";
 
-export default function PengetahuanPage() {
+function PengetahuanContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [search, setSearch] = useState("");
-  const [active, setActive] = useState<string>("semua");
+  const [active, setActive] = useState<string>(() => {
+    const param = searchParams.get("kategori");
+    const allowed = categories.map((c) => c.id);
+    return param && (allowed as string[]).includes(param) ? param : "semua";
+  });
+
+  useEffect(() => {
+    const param = searchParams.get("kategori");
+    const allowed = categories.map((c) => c.id);
+    const next = param && (allowed as string[]).includes(param) ? param : "semua";
+    if (next !== active) setActive(next);
+  }, [searchParams, active]);
+
+  const handleCategoryChange = (value: string) => {
+    const allowed = categories.map((c) => c.id);
+    const next = (allowed as string[]).includes(value) ? value : "semua";
+    setActive(next);
+    router.push(`?kategori=${next}`);
+  };
 
   const filtered = useMemo(() => {
     return articles.filter((a) => {
@@ -31,13 +52,13 @@ export default function PengetahuanPage() {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">🔍</span>
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari: phytosanitary, HS Code, cold chain..." className="w-full pl-11 pr-4 py-3.5 rounded-full bg-white text-stone-900 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
             </div>
-            <select value={active} onChange={(e) => setActive(e.target.value)} className="px-5 py-3.5 rounded-full bg-white text-stone-900 text-sm font-semibold focus:outline-none">
+            <select value={active} onChange={(e) => handleCategoryChange(e.target.value)} className="px-5 py-3.5 rounded-full bg-white text-stone-900 text-sm font-semibold focus:outline-none">
               {categories.map((c) => (<option key={c.id} value={c.id}>{c.label}</option>))}
             </select>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {categories.map((c) => (
-              <button key={c.id} onClick={() => setActive(c.id)} className={`px-4 py-2 rounded-full text-xs font-bold border transition ${active === c.id ? "bg-white text-emerald-900 border-white" : "bg-white/10 text-white border-white/20 hover:bg-white/20"}`}>{c.label}</button>
+              <button key={c.id} onClick={() => handleCategoryChange(c.id)} className={`px-4 py-2 rounded-full text-xs font-bold border transition ${active === c.id ? "bg-white text-emerald-900 border-white" : "bg-white/10 text-white border-white/20 hover:bg-white/20"}`}>{c.label}</button>
             ))}
           </div>
         </div>
@@ -84,5 +105,13 @@ export default function PengetahuanPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function PengetahuanPage() {
+  return (
+    <Suspense fallback={<div className="bg-[#fefcf8] min-h-screen p-10 text-center text-stone-500">Memuat...</div>}>
+      <PengetahuanContent />
+    </Suspense>
   );
 }

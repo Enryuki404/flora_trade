@@ -17,9 +17,9 @@ export default function Footer() {
               Spesialis jasa export-import komoditi flora non-tambang. Kami bantu UMKM dan agribisnis Indonesia tembus pasar global — legal, segar, tepat waktu.
             </p>
             <div className="flex gap-3 mt-5">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">ig</a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">in</a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">yt</a>
+              <a href="/#" aria-label="Instagram FloraTrade" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">ig</a>
+              <a href="/#" aria-label="LinkedIn FloraTrade" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">in</a>
+              <a href="/#" aria-label="YouTube FloraTrade" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-emerald-600 transition text-sm">yt</a>
             </div>
           </div>
 
@@ -58,7 +58,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between gap-3 text-xs text-stone-500">
           <span>© 2026 FloraTrade Nusantara. All rights reserved.</span>
-          <span className="flex gap-4"><a href="#" className="hover:text-white">Kebijakan Privasi</a><a href="#" className="hover:text-white">Syarat Layanan</a></span>
+          <span className="flex gap-4"><a href="/#privacy" className="hover:text-white">Kebijakan Privasi</a><a href="/#terms" className="hover:text-white">Syarat Layanan</a></span>
         </div>
       </div>
     </footer>

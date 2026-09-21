@@ -1,4 +1,4 @@
-import { articles } from "@/data/articles";
+import { articles, categories } from "@/data/articles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -6,20 +6,129 @@ export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
 }
 
-function mdToHtml(md: string) {
-  // super minimal markdown -> html for demo (headings, tables, bold, blockquote, lists)
-  let html = md
-    .replace(/^### (.*$)/gim, '<h3 class="font-bold text-stone-900 mt-6 mb-2">$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-extrabold text-stone-900 mt-8 mb-3">$1</h2>')
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-    .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r-xl my-4 text-sm text-stone-700">$1</blockquote>')
-    .replace(/^\- (.*$)/gim, '<li class="ml-6 list-disc text-stone-700">$1</li>')
-    .replace(/^\d+\. (.*$)/gim, '<li class="ml-6 list-decimal text-stone-700">$1</li>')
-    .replace(/\n\n/g, '</p><p class="mt-4 leading-relaxed text-stone-700">')
-  ;
-  // table quick
-  html = html.replace(/\|/g, ' | ');
-  return `<p class="mt-4 leading-relaxed text-stone-700">${html}</p>`;
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function mdToHtml(md: string): string {
+  // Trusted source: src/data/articles.ts (internal) — tetap escape HTML untuk cegah XSS
+  // jika konten suatu saat berasal dari input user/CMS. Sanitizer ringan tanpa DOMPurify/isomorphic-dompurify.
+  const trimmed = md.trim();
+  if (!trimmed) return "";
+  const escaped = escapeHtml(trimmed);
+  const inline = (s: string) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+  const blocks = escaped.split(/\n\s*\n/);
+  const out: string[] = [];
+
+  const isSeparatorRow = (row: string) => /^[\s|:\-]+$/.test(row) && row.includes("---");
+
+  const buildTable = (block: string): string => {
+    const rows = block
+      .split("\n")
+      .map((r) => r.trim())
+      .filter(Boolean);
+    const filtered = rows.filter((r) => !isSeparatorRow(r));
+    if (filtered.length === 0) return "";
+    const headerCells = filtered[0]
+      .split("|")
+      .map((c) => c.trim())
+      .filter((c) => c !== "");
+    const bodyRows = filtered.slice(1);
+    const thead =
+      headerCells.length > 0
+        ? `<thead><tr>${headerCells.map((c) => `<th class="border border-stone-200 bg-stone-50 px-3 py-2 text-left font-bold text-stone-900">${inline(c)}</th>`).join("")}</tr></thead>`
+        : "";
+    const tbody =
+      bodyRows.length > 0
+        ? `<tbody>${bodyRows
+            .map((r) => {
+              const cells = r
+                .split("|")
+                .map((c) => c.trim())
+                .filter((c) => c !== "");
+              // skip malformed empty rows
+              if (cells.length === 0) return "";
+              return `<tr>${cells.map((c) => `<td class="border border-stone-200 px-3 py-2 text-stone-700">${inline(c)}</td>`).join("")}</tr>`;
+            })
+            .join("")}</tbody>`
+        : "";
+    return `<div class="overflow-x-auto my-6"><table class="w-full text-sm border-collapse">${thead}${tbody}</table></div>`;
+  };
+
+  for (const block of blocks) {
+    const b = block.trim();
+    if (!b) continue;
+
+    // table detection: block contains pipe and every non-empty line contains pipe
+    const lines = b.split("\n");
+    const nonEmptyLines = lines.map((l) => l.trim()).filter(Boolean);
+    const isTableBlock =
+      nonEmptyLines.length >= 1 &&
+      nonEmptyLines.every((l) => l.includes("|")) &&
+      nonEmptyLines.some((l) => l.split("|").filter((c) => c.trim() !== "").length >= 2);
+
+    if (isTableBlock) {
+      out.push(buildTable(b));
+      continue;
+    }
+
+    // heading H2 / H3 (single line block)
+    if (/^###\s+/.test(b)) {
+      const content = b.replace(/^###\s+/, "").trim();
+      out.push(`<h3 class="font-bold text-stone-900 mt-6 mb-2">${inline(content)}</h3>`);
+      continue;
+    }
+    if (/^##\s+/.test(b)) {
+      const content = b.replace(/^##\s+/, "").trim();
+      out.push(`<h2 class="text-xl font-extrabold text-stone-900 mt-8 mb-3">${inline(content)}</h2>`);
+      continue;
+    }
+
+    // blockquote: one or multiple lines starting with >
+    if (/^>\s?/.test(b)) {
+      const qLines = b
+        .split("\n")
+        .map((l) => l.replace(/^>\s?/, "").trim())
+        .filter(Boolean);
+      const joined = qLines.map((l) => inline(l)).join("<br>");
+      out.push(`<blockquote class="border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r-xl my-4 text-sm text-stone-700">${joined}</blockquote>`);
+      continue;
+    }
+
+    // unordered list block: all lines start with -
+    if (nonEmptyLines.length > 0 && nonEmptyLines.every((l) => /^\-\s+/.test(l))) {
+      const items = nonEmptyLines.map((l) => {
+        const text = l.replace(/^\-\s+/, "").trim();
+        return `<li class="ml-6 list-disc text-stone-700">${inline(text)}</li>`;
+      });
+      out.push(`<ul class="my-4 space-y-1.5">${items.join("")}</ul>`);
+      continue;
+    }
+
+    // ordered list block: all lines start with digit.
+    if (nonEmptyLines.length > 0 && nonEmptyLines.every((l) => /^\d+\.\s+/.test(l))) {
+      const items = nonEmptyLines.map((l) => {
+        const text = l.replace(/^\d+\.\s+/, "").trim();
+        return `<li class="ml-6 list-decimal text-stone-700">${inline(text)}</li>`;
+      });
+      out.push(`<ol class="my-4 space-y-1.5">${items.join("")}</ol>`);
+      continue;
+    }
+
+    // fallback paragraph: collapse single newlines to space, trim, no unclosed <p>
+    const para = b.replace(/\n/g, " ").trim();
+    if (para) {
+      out.push(`<p class="mt-4 leading-relaxed text-stone-700">${inline(para)}</p>`);
+    }
+  }
+
+  return out.join("\n");
 }
 
 export default async function ArticleDetail({ params }: { params: Promise<{ slug: string }> }) {
@@ -58,7 +167,14 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                   <div className="font-bold text-stone-900">Butuh bantuan ekspor flora ini?</div>
                   <div className="text-sm text-stone-600">Konsultasi gratis — kami bantu cek regulasi negara tujuan.</div>
                 </div>
-                <a href="https://wa.me/6281234567890?text=Halo%20FloraTrade%20mau%20konsultasi%20soal%20artikel%20" target="_blank" className="px-6 py-3 rounded-full bg-emerald-700 text-white font-bold text-sm whitespace-nowrap">Konsultasi via WA →</a>
+                <a
+                  href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo FloraTrade mau konsultasi soal artikel: ${article.title}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 rounded-full bg-emerald-700 text-white font-bold text-sm whitespace-nowrap"
+                >
+                  Konsultasi via WA →
+                </a>
               </div>
             </div>
           </article>
@@ -82,9 +198,17 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
             <div className="bg-white rounded-2xl border border-stone-200 p-6">
               <div className="font-bold text-stone-900">Kategori</div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {Array.from(new Set(articles.map(a=>a.category))).map((c) => (
-                  <Link key={c} href={`/pengetahuan?kategori=${c}`} className="px-3 py-1.5 rounded-full bg-stone-100 text-xs font-semibold hover:bg-emerald-100 hover:text-emerald-700">{c}</Link>
-                ))}
+                {categories
+                  .filter((cat) => cat.id !== "semua")
+                  .map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/pengetahuan?kategori=${encodeURIComponent(cat.id)}`}
+                      className="px-3 py-1.5 rounded-full bg-stone-100 text-xs font-semibold hover:bg-emerald-100 hover:text-emerald-700"
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
               </div>
             </div>
 

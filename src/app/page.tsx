@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { articles } from "@/data/articles";
+import { waLink } from "@/lib/constants";
+// NOTE: raw <img> tags kept intentionally for now — next.config.ts has images.remotePatterns for images.unsplash.com
+// TODO: gradually migrate hero/background images to next/image with `unoptimized` flag when ready
 
 // — Helper: animated counter —
 function Counter({ target, suffix = "+" }: { target: number; suffix?: string }) {
@@ -25,28 +28,28 @@ const layanan = [
     icon: "🌱",
     title: "Jasa Export Flora",
     desc: "Tanaman hias, bunga potong, benih, umbi & rempah. Kami urus karantina + phytosanitary sampai lolos negara tujuan.",
-    href: "#kontak",
+    href: "/#kontak",
     color: "bg-emerald-50 border-emerald-200",
   },
   {
     icon: "🌸",
     title: "Jasa Import Benih & Bibit",
     desc: "Import bibit unggul legal dengan izin Kementan, karantina, dan perhitungan bea masuk transparan.",
-    href: "#kontak",
+    href: "/#kontak",
     color: "bg-amber-50 border-amber-200",
   },
   {
     icon: "❄️",
     title: "Freight Forwarding Cold Chain",
     desc: "Air freight 2-4 hari & reefer sea freight dengan data logger suhu real-time. Flora tetap segar.",
-    href: "#kontak",
+    href: "/#kontak",
     color: "bg-sky-50 border-sky-200",
   },
   {
     icon: "📄",
     title: "Konsultasi Dokumen & Karantina",
     desc: "PEB/PIB, Certificate of Origin, HS Code flora, fumigasi — semua beres tanpa pusing.",
-    href: "#kontak",
+    href: "/#kontak",
     color: "bg-stone-50 border-stone-200",
   },
 ];
@@ -70,6 +73,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
+          {/* TODO: migrate to next/image <Image fill unoptimized> - remotePatterns for images.unsplash.com already in next.config.ts */}
           <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1600&auto=format&fit=crop&q=80" alt="Flora export" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/75 to-emerald-800/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -90,7 +94,7 @@ export default function Home() {
                 Kami bantu urus <b>phytosanitary, karantina, bea cukai & cold chain</b> sampai tujuan. Fokus kembangkan kebun & bisnis, biarkan kami yang urus sisanya.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href="#kontak" className="px-7 py-3.5 rounded-full bg-white text-emerald-900 font-bold text-sm shadow-lg hover:bg-stone-50 transition text-center">Mulai Konsultasi Gratis →</a>
+                <a href="/#kontak" className="px-7 py-3.5 rounded-full bg-white text-emerald-900 font-bold text-sm shadow-lg hover:bg-stone-50 transition text-center">Mulai Konsultasi Gratis →</a>
                 <Link href="/pengetahuan" className="px-7 py-3.5 rounded-full bg-white/10 backdrop-blur border border-white/30 text-white font-semibold text-sm hover:bg-white/20 transition text-center">Pelajari Prosesnya</Link>
               </div>
               <div className="mt-6 flex items-center gap-4 text-xs text-white/80">
@@ -177,7 +181,7 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-white border flex items-center justify-center text-2xl shadow-sm">{l.icon}</div>
               <h3 className="font-bold text-stone-900 mt-4">{l.title}</h3>
               <p className="text-sm text-stone-600 mt-2 leading-relaxed flex-1">{l.desc}</p>
-              <Link href={l.href} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:gap-2 transition">Selengkapnya →</Link>
+              <a href={l.href} className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:gap-2 transition">Selengkapnya →</a>
             </div>
           ))}
         </div>
@@ -367,7 +371,7 @@ export default function Home() {
                     <textarea rows={4} placeholder="Contoh: Mau ekspor 200 Aglaonema ke Belanda, butuh bantuan PC & freight..." className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none" />
                   </div>
                   <button type="submit" className="w-full py-3.5 rounded-full bg-emerald-700 text-white font-bold text-sm hover:bg-emerald-800 transition shadow">Kirim Permintaan →</button>
-                  <a href="https://wa.me/6281234567890?text=Halo%20FloraTrade%20mau%20konsultasi" target="_blank" className="block w-full py-3.5 rounded-full border border-stone-300 text-center font-semibold text-sm hover:bg-stone-50 transition">💬 Chat WhatsApp Langsung</a>
+                  <a href={waLink("Halo FloraTrade mau konsultasi")} target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 rounded-full border border-stone-300 text-center font-semibold text-sm hover:bg-stone-50 transition">💬 Chat WhatsApp Langsung</a>
                   <p className="text-[11px] text-stone-500 text-center">Dengan mengirim form, kamu setuju dengan Kebijakan Privasi kami.</p>
                 </form>
               )}

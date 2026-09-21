@@ -31,6 +31,9 @@ const nextConfig: NextConfig = {
   // Fix Watchpack scanning C:\ on Windows when workspace root is "/"
   // by explicitly scoping tracing & watch to this project dir
   outputFileTracingRoot: path.resolve(process.cwd()),
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+  },
   turbopack: {
     // Tell Turbopack the project root (Next 15.3+)
     root: path.resolve(process.cwd()),

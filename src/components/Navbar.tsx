@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { categories } from "@/data/articles";
+import { waLink } from "@/lib/constants";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -53,8 +55,8 @@ export default function Navbar() {
               </Link>
               {knowledgeOpen && (
                 <div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-stone-100 p-2">
-                  {["Dasar Export Import", "Regulasi & Bea Cukai", "Incoterms", "Dokumen", "Logistik", "Tips"].map((c) => (
-                    <Link key={c} href={`/pengetahuan?kategori=${c}`} className="block px-3 py-2 rounded-lg hover:bg-emerald-50 text-sm">{c}</Link>
+                  {categories.filter((c) => c.id !== "semua").map((c) => (
+                    <Link key={c.id} href={`/pengetahuan?kategori=${c.id}`} className="block px-3 py-2 rounded-lg hover:bg-emerald-50 text-sm">{c.label}</Link>
                   ))}
                 </div>
               )}
@@ -65,7 +67,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <a href="https://wa.me/6281234567890?text=Halo%20FloraTrade%20mau%20konsultasi%20ekspor%20flora" target="_blank" className="px-5 py-2.5 rounded-full bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800 transition shadow-sm">Konsultasi Gratis →</a>
+            <a href={waLink("Halo FloraTrade mau konsultasi ekspor flora")} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800 transition shadow-sm">Konsultasi Gratis →</a>
           </div>
 
           {/* Mobile toggle */}
@@ -82,7 +84,7 @@ export default function Navbar() {
           <Link href="/#layanan" onClick={() => setOpen(false)} className="block py-2 font-medium">Layanan</Link>
           <Link href="/pengetahuan" onClick={() => setOpen(false)} className="block py-2 font-medium">Product Knowledge</Link>
           <Link href="/#kontak" onClick={() => setOpen(false)} className="block py-2 font-medium">Kontak</Link>
-          <a href="https://wa.me/6281234567890?text=Halo%20FloraTrade" className="block text-center mt-3 px-5 py-3 rounded-full bg-emerald-700 text-white font-semibold">Konsultasi Gratis</a>
+          <a href={waLink("Halo FloraTrade mau konsultasi ekspor flora")} target="_blank" rel="noopener noreferrer" className="block text-center mt-3 px-5 py-3 rounded-full bg-emerald-700 text-white font-semibold">Konsultasi Gratis</a>
         </div>
       )}
     </header>
