@@ -1,6 +1,7 @@
 import { articles, categories } from "@/data/articles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SafeImage, { SafeThumb } from "@/components/SafeImage";
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -144,8 +145,10 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
         <Link href="/pengetahuan" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">← Kembali ke Product Knowledge</Link>
 
         <div className="grid lg:grid-cols-[1fr_340px] gap-8 mt-6">
-          <article className="bg-white rounded-[24px] border border-stone-200 overflow-hidden">
-            <img src={article.coverImage} alt={article.title} className="w-full h-[380px] object-cover" />
+          <article className="bg-white rounded-[24px] border border-stone-200 overflow-hidden shadow-sm">
+            <div className="relative w-full h-[380px] overflow-hidden bg-stone-100">
+              <SafeImage src={article.coverImage} alt={article.title} sizes="(max-width: 1024px) 100vw, 700px" className="object-cover" />
+            </div>
             <div className="p-6 lg:p-8">
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 <span className="text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full bg-emerald-700 text-white">{article.category}</span>
@@ -180,12 +183,12 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
           </article>
 
           <aside className="space-y-6">
-            <div className="bg-white rounded-2xl border border-stone-200 p-6">
+            <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
               <div className="font-bold text-stone-900">Artikel Terbaru</div>
               <div className="mt-4 space-y-4">
                 {latest.map((a) => (
                   <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="flex gap-3 group">
-                    <img src={a.coverImage} alt={a.title} className="w-16 h-16 rounded-xl object-cover shrink-0" />
+                    <SafeThumb src={a.coverImage} alt={a.title} />
                     <div>
                       <div className="text-xs font-bold tracking-wide uppercase text-emerald-700">{a.category}</div>
                       <div className="text-sm font-semibold text-stone-900 leading-tight line-clamp-2 group-hover:text-emerald-700">{a.title}</div>
@@ -195,7 +198,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-stone-200 p-6">
+            <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
               <div className="font-bold text-stone-900">Kategori</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {categories
@@ -219,7 +222,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
             </div>
 
             {related.length > 0 && (
-              <div className="bg-white rounded-2xl border border-stone-200 p-6">
+              <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
                 <div className="font-bold text-stone-900">Artikel Terkait</div>
                 <div className="mt-3 space-y-3">
                   {related.map((r) => (

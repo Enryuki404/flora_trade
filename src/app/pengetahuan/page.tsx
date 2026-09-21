@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { articles, categories } from "@/data/articles";
+import SafeImage from "@/components/SafeImage";
 
 function PengetahuanContent() {
   const searchParams = useSearchParams();
@@ -65,7 +66,7 @@ function PengetahuanContent() {
       </section>
 
       {/* Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 overflow-visible">
         <div className="flex items-center justify-between mb-6">
           <div className="text-sm text-stone-600">Menampilkan <b className="text-stone-900">{filtered.length}</b> artikel {active !== "semua" && <>di kategori <b className="text-emerald-700">{categories.find(c=>c.id===active)?.label}</b></>}</div>
           <Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">← Kembali ke Home</Link>
@@ -74,12 +75,17 @@ function PengetahuanContent() {
         {filtered.length === 0 ? (
           <div className="bg-white border rounded-2xl p-10 text-center text-stone-500">Tidak ada artikel ditemukan untuk “{search}”</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-visible pt-1 pb-2">
             {filtered.map((a) => (
-              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-white rounded-[20px] border border-stone-200 overflow-hidden hover:shadow-xl transition flex flex-col">
-                <div className="h-48 overflow-hidden relative">
-                  <img src={a.coverImage} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                  <span className="absolute top-3 left-3 text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-emerald-700 text-white">{a.category}</span>
+              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-white rounded-[20px] border border-stone-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col">
+                <div className="relative h-48 overflow-hidden bg-stone-100 isolate">
+                  <SafeImage
+                    src={a.coverImage}
+                    alt={a.title}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-3 left-3 z-10 text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-emerald-700 text-white shadow-md">{a.category}</span>
                 </div>
                 <div className="p-5 flex flex-col flex-1">
                   <div className="text-xs text-stone-400">{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} • {a.readingTime} • {a.author}</div>

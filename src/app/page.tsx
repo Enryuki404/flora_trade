@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { articles } from "@/data/articles";
 import { waLink } from "@/lib/constants";
-// NOTE: raw <img> tags kept intentionally for now — next.config.ts has images.remotePatterns for images.unsplash.com
-// TODO: gradually migrate hero/background images to next/image with `unoptimized` flag when ready
+import SafeImage from "@/components/SafeImage";
 
 // — Helper: animated counter —
 function Counter({ target, suffix = "+" }: { target: number; suffix?: string }) {
@@ -73,8 +73,14 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          {/* TODO: migrate to next/image <Image fill unoptimized> - remotePatterns for images.unsplash.com already in next.config.ts */}
-          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1600&auto=format&fit=crop&q=80" alt="Flora export" className="w-full h-full object-cover" />
+          <Image
+            src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1600&auto=format&fit=crop&q=80"
+            alt="Flora export"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/75 to-emerald-800/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
@@ -107,9 +113,15 @@ export default function Home() {
             {/* Hero Card */}
             <div className="hidden lg:block">
               <div className="bg-white rounded-[24px] shadow-2xl p-3 max-w-md ml-auto">
-                <div className="rounded-2xl overflow-hidden relative">
-                  <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b6?w=700&auto=format&fit=crop&q=80" alt="Monstera" className="w-full h-[300px] object-cover" />
-                  <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur rounded-2xl p-4 flex items-center justify-between">
+                <div className="rounded-2xl overflow-hidden relative h-[300px] bg-stone-100">
+                  <Image
+                    src="https://images.unsplash.com/photo-1463936575829-25148e1db1b6?w=700&auto=format&fit=crop&q=80"
+                    alt="Monstera"
+                    fill
+                    sizes="400px"
+                    className="object-cover"
+                  />
+                  <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur rounded-2xl p-4 flex items-center justify-between shadow-lg">
                     <div>
                       <div className="text-xs text-stone-500">Shipment Terbaru</div>
                       <div className="font-bold text-stone-900 text-sm">1.200 Monstera Variegata → Amsterdam</div>
@@ -188,8 +200,8 @@ export default function Home() {
       </section>
 
       {/* PRODUCT KNOWLEDGE PREVIEW */}
-      <section className="bg-white border-y border-stone-200 py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white border-y border-stone-200 py-16 lg:py-20 overflow-visible">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="text-xs font-bold tracking-[0.2em] text-emerald-700 uppercase">Product Knowledge Hub</div>
@@ -198,15 +210,23 @@ export default function Home() {
             </div>
             <Link href="/pengetahuan" className="px-5 py-2.5 rounded-full border border-stone-300 text-sm font-semibold hover:bg-stone-50 transition">Lihat Semua Artikel →</Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Grid tidak kepotong: gap-6 + overflow visible, card isolate hover scale tidak bikin overflow parent */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-visible pt-1 pb-2">
             {preview.map((a) => (
-              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-[#fefcf8] rounded-[20px] border border-stone-200 overflow-hidden hover:shadow-xl transition">
-                <div className="h-48 overflow-hidden">
-                  <img src={a.coverImage} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+              <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="group bg-[#fefcf8] rounded-[20px] border border-stone-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm flex flex-col">
+                <div className="relative h-48 overflow-hidden bg-stone-100 isolate">
+                  <SafeImage
+                    src={a.coverImage}
+                    alt={a.title}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-3 left-3 z-10 text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-emerald-700 text-white shadow-md">
+                    {a.category}
+                  </span>
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-emerald-700 text-white">{a.category}</span>
                     <span className="text-xs text-stone-400">{new Date(a.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })} • {a.readingTime}</span>
                   </div>
                   <h3 className="font-bold text-stone-900 leading-tight line-clamp-2 group-hover:text-emerald-700 transition">{a.title}</h3>
@@ -244,9 +264,25 @@ export default function Home() {
             </div>
           </div>
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&auto=format&fit=crop&q=80" alt="Greenhouse" className="rounded-[24px] w-full h-[480px] object-cover shadow-xl" />
+            <div className="relative w-full h-[480px] rounded-[24px] overflow-hidden shadow-xl bg-stone-100">
+              <Image
+                src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&auto=format&fit=crop&q=80"
+                alt="Greenhouse"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
             <div className="absolute -bottom-6 -left-4 bg-white rounded-2xl shadow-xl border p-5 flex gap-4 max-w-sm">
-              <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&auto=format&fit=crop" alt="flowers" className="w-20 h-20 rounded-xl object-cover" />
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-stone-100">
+                <Image
+                  src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&auto=format&fit=crop"
+                  alt="flowers"
+                  fill
+                  sizes="80px"
+                  className="object-cover"
+                />
+              </div>
               <div>
                 <div className="font-bold text-stone-900 text-sm">Ekspor Perdana UMKM Lolos 100%</div>
                 <div className="text-xs text-stone-600 mt-1">Ibu Sari, Bandung — 300 Aglaonema ke Dubai, tanpa reject karantina.</div>
