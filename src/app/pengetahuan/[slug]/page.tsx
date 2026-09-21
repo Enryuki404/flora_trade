@@ -43,7 +43,7 @@ function mdToHtml(md: string): string {
     const bodyRows = filtered.slice(1);
     const thead =
       headerCells.length > 0
-        ? `<thead><tr>${headerCells.map((c) => `<th class="border border-stone-200 bg-stone-50 px-3 py-2 text-left font-bold text-stone-900">${inline(c)}</th>`).join("")}</tr></thead>`
+        ? `<thead><tr>${headerCells.map((c) => `<th class="border border-stone-200 px-3 py-2 text-left font-bold text-stone-900" style="background: var(--brand-light, #ECFDF5)">${inline(c)}</th>`).join("")}</tr></thead>`
         : "";
     const tbody =
       bodyRows.length > 0
@@ -98,7 +98,7 @@ function mdToHtml(md: string): string {
         .map((l) => l.replace(/^>\s?/, "").trim())
         .filter(Boolean);
       const joined = qLines.map((l) => inline(l)).join("<br>");
-      out.push(`<blockquote class="border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r-xl my-4 text-sm text-stone-700">${joined}</blockquote>`);
+      out.push(`<blockquote class="rounded-r-xl my-4 text-sm text-stone-700 p-4" style="border-left:4px solid var(--brand-primary, #0F7A4B); background: var(--brand-light, #ECFDF5)">${joined}</blockquote>`);
       continue;
     }
 
@@ -142,7 +142,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
   return (
     <div className="bg-[#fefcf8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href="/pengetahuan" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">← Kembali ke Product Knowledge</Link>
+        <Link href="/pengetahuan" className="inline-flex items-center gap-2 text-sm font-semibold hover:opacity-80 transition-colors duration-300" style={{ color: "var(--brand-primary, #0F7A4B)" }}>← Kembali ke Product Knowledge</Link>
 
         <div className="grid lg:grid-cols-[1fr_340px] gap-8 mt-6">
           <article className="bg-white rounded-[24px] border border-stone-200 overflow-hidden shadow-sm">
@@ -151,21 +151,21 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
             </div>
             <div className="p-6 lg:p-8">
               <div className="flex flex-wrap items-center gap-2 mb-4">
-                <span className="text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full bg-emerald-700 text-white">{article.category}</span>
+                <span className="text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full text-white transition-colors duration-300" style={{ backgroundColor: "var(--brand-primary, #0F7A4B)" }}>{article.category}</span>
                 <span className="text-xs text-stone-500">{new Date(article.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} • {article.readingTime}</span>
               </div>
               <h1 className="text-2xl lg:text-3xl font-extrabold text-stone-900 leading-tight tracking-tight">{article.title}</h1>
               <div className="flex items-center gap-3 mt-4 text-sm text-stone-500">
-                <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">{article.author[0]}</span>
+                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold transition-colors duration-300" style={{ backgroundColor: "var(--brand-light, #ECFDF5)", color: "var(--brand-primary, #0F7A4B)" }}>{article.author[0]}</span>
                 <span>Ditulis oleh <b className="text-stone-900">{article.author}</b></span>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {article.tags.map((t) => (<span key={t} className="text-xs px-2.5 py-1 rounded-full bg-stone-100 text-stone-600">{t}</span>))}
+                {article.tags.map((t) => (<span key={t} className="text-xs px-2.5 py-1 rounded-full text-stone-600 transition-colors duration-300" style={{ backgroundColor: "var(--brand-light, #ECFDF5)" }}>{t}</span>))}
               </div>
 
               <div className="prose prose-stone max-w-none mt-8 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: mdToHtml(article.content) }} />
 
-              <div className="mt-10 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="mt-10 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 transition-colors duration-300 border" style={{ backgroundColor: "var(--brand-light, #ECFDF5)", borderColor: "color-mix(in srgb, var(--brand-accent, #34D399) 40%, #e7e5e4)" }}>
                 <div>
                   <div className="font-bold text-stone-900">Butuh bantuan ekspor flora ini?</div>
                   <div className="text-sm text-stone-600">Konsultasi gratis — kami bantu cek regulasi negara tujuan.</div>
@@ -174,7 +174,8 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                   href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo FloraTrade mau konsultasi soal artikel: ${article.title}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full bg-emerald-700 text-white font-bold text-sm whitespace-nowrap"
+                  className="px-6 py-3 rounded-full text-white font-bold text-sm whitespace-nowrap transition-colors duration-300 hover:opacity-95"
+                  style={{ backgroundColor: "var(--brand-primary, #0F7A4B)" }}
                 >
                   Konsultasi via WA →
                 </a>
@@ -190,8 +191,8 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                   <Link key={a.id} href={`/pengetahuan/${a.slug}`} className="flex gap-3 group">
                     <SafeThumb src={a.coverImage} alt={a.title} />
                     <div>
-                      <div className="text-xs font-bold tracking-wide uppercase text-emerald-700">{a.category}</div>
-                      <div className="text-sm font-semibold text-stone-900 leading-tight line-clamp-2 group-hover:text-emerald-700">{a.title}</div>
+                      <div className="text-xs font-bold tracking-wide uppercase transition-colors duration-300" style={{ color: "var(--brand-primary, #0F7A4B)" }}>{a.category}</div>
+                      <div className="text-sm font-semibold text-stone-900 leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[var(--brand-primary)]">{a.title}</div>
                     </div>
                   </Link>
                 ))}
@@ -207,7 +208,8 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                     <Link
                       key={cat.id}
                       href={`/pengetahuan?kategori=${encodeURIComponent(cat.id)}`}
-                      className="px-3 py-1.5 rounded-full bg-stone-100 text-xs font-semibold hover:bg-emerald-100 hover:text-emerald-700"
+                      className="px-3 py-1.5 rounded-full text-xs font-semibold hover:opacity-80 transition-colors duration-300"
+                      style={{ backgroundColor: "var(--brand-light, #ECFDF5)", color: "var(--brand-primary, #0F7A4B)" }}
                     >
                       {cat.label}
                     </Link>
@@ -215,10 +217,10 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
               </div>
             </div>
 
-            <div className="bg-emerald-700 rounded-2xl p-6 text-white">
+            <div className="rounded-2xl p-6 text-white transition-colors duration-300" style={{ background: `linear-gradient(to bottom right, var(--brand-primary, #0F7A4B), var(--brand-primary-hover, #0D6A41))` }}>
               <div className="font-bold">Mau Ekspor Minggu Ini?</div>
               <p className="text-sm text-white/80 mt-2">Dapatkan simulasi biaya & timeline gratis untuk komoditi flora kamu.</p>
-              <Link href="/#kontak" className="mt-4 inline-block px-5 py-2.5 rounded-full bg-white text-emerald-700 font-bold text-sm w-full text-center">Konsultasi Gratis</Link>
+              <Link href="/#kontak" className="mt-4 inline-block px-5 py-2.5 rounded-full bg-white font-bold text-sm w-full text-center transition-colors duration-300 hover:bg-stone-50" style={{ color: "var(--brand-primary, #0F7A4B)" }}>Konsultasi Gratis</Link>
             </div>
 
             {related.length > 0 && (
@@ -226,7 +228,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                 <div className="font-bold text-stone-900">Artikel Terkait</div>
                 <div className="mt-3 space-y-3">
                   {related.map((r) => (
-                    <Link key={r.id} href={`/pengetahuan/${r.slug}`} className="block text-sm font-semibold text-stone-700 hover:text-emerald-700">→ {r.title}</Link>
+                    <Link key={r.id} href={`/pengetahuan/${r.slug}`} className="block text-sm font-semibold hover:opacity-80 transition-colors duration-300" style={{ color: "var(--brand-primary, #0F7A4B)" }}>→ {r.title}</Link>
                   ))}
                 </div>
               </div>

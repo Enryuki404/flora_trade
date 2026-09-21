@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 export type BrandId = "floratrade" | "orchidnest" | "orchidloka" | "orchidgardenia";
 
 export type LogoType = "text" | "monogram" | "icon";
@@ -102,4 +104,34 @@ export const DEFAULT_BRAND_ID: BrandId = "floratrade";
 
 export function getBrand(id: string): BrandConfig {
   return brandMap[id as BrandId] ?? brandMap[DEFAULT_BRAND_ID];
+}
+
+// Helper: CSS variables for theming (SSR safe fallback = DEFAULT)
+export function getBrandCSSVars(brand: BrandConfig): CSSProperties {
+  return {
+    ["--brand-primary" as string]: brand.colors.primary,
+    ["--brand-primary-hover" as string]: brand.colors.primaryHover,
+    ["--brand-accent" as string]: brand.colors.accent,
+    ["--brand-light" as string]: brand.colors.light,
+  } as CSSProperties;
+}
+
+// Helper: inline styles using brand with 300ms transition — use for CTA, badges, links
+export function getBrandStyles(brand: BrandConfig) {
+  return {
+    primaryBg: { backgroundColor: brand.colors.primary, transition: "background-color 300ms ease, border-color 300ms ease, color 300ms ease" } as CSSProperties,
+    primaryText: { color: brand.colors.primary, transition: "color 300ms ease" } as CSSProperties,
+    accentText: { color: brand.colors.accent, transition: "color 300ms ease" } as CSSProperties,
+    accentBg: { backgroundColor: brand.colors.accent, transition: "background-color 300ms ease" } as CSSProperties,
+    lightBg: { backgroundColor: brand.colors.light, transition: "background-color 300ms ease" } as CSSProperties,
+    gradient: { background: `linear-gradient(to right, ${brand.colors.primary}, ${brand.colors.primaryHover})`, transition: "background 300ms ease" } as CSSProperties,
+  };
+}
+
+// Utility: hex to rgba for hero overlay
+export function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }

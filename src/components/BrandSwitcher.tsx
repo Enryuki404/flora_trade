@@ -81,17 +81,20 @@ export default function BrandSwitcher({ isOpen, onClose }: Props) {
                 key={b.id}
                 onClick={() => handleSelect(b.id)}
                 className={`group w-full text-left rounded-2xl border px-4 py-3.5 flex items-center gap-3.5 transition-all duration-300 ${
-                  active
-                    ? "bg-stone-900 text-white border-stone-900 shadow-lg scale-[1.01]"
-                    : "bg-white hover:bg-stone-50 border-stone-200 hover:border-stone-300 hover:shadow-sm"
+                  active ? "text-white shadow-lg scale-[1.01]" : "bg-white hover:bg-stone-50 border-stone-200 hover:border-stone-300 hover:shadow-sm"
                 }`}
+                style={
+                  active
+                    ? { backgroundColor: b.colors.primary, borderColor: b.colors.primary }
+                    : undefined
+                }
               >
                 {/* Logo mark */}
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-[15px] font-bold shrink-0 transition-colors duration-300 shadow-sm border"
                   style={{
-                    backgroundColor: active ? b.colors.primary : b.colors.light,
-                    color: active ? "#fff" : b.colors.primary,
+                    backgroundColor: active ? "#fff" : b.colors.light,
+                    color: active ? b.colors.primary : b.colors.primary,
                     borderColor: active ? "transparent" : b.colors.accent + "55",
                   }}
                 >

@@ -53,16 +53,18 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
 
   const brand = brandMap[brandId] ?? brandMap[DEFAULT_BRAND_ID];
 
-  // Apply CSS variables for subtle global transition hint (optional)
-  // We keep it in context so Navbar/Footer can use inline styles
+  // CSS variables for brand theming — SSR safe: default brand fallback in style
+  const cssVars: React.CSSProperties = {
+    ["--brand-primary" as string]: brand.colors.primary,
+    ["--brand-primary-hover" as string]: brand.colors.primaryHover,
+    ["--brand-accent" as string]: brand.colors.accent,
+    ["--brand-light" as string]: brand.colors.light,
+    transition: "background-color 300ms ease, color 300ms ease, border-color 300ms ease",
+  } as React.CSSProperties;
+
   return (
     <BrandContext.Provider value={{ brand, brandId, brands, setBrand, isSwitcherOpen, openSwitcher, closeSwitcher }}>
-      <div
-        // 300ms transition wrapper - will animate background/border via child inline styles
-        style={{ transition: "background-color 300ms ease, color 300ms ease" } as React.CSSProperties}
-      >
-        {children}
-      </div>
+      <div style={cssVars}>{children}</div>
     </BrandContext.Provider>
   );
 }

@@ -23,11 +23,15 @@ export default function SafeImage({
   wrapperClassName = "",
 }: Props) {
   const [error, setError] = useState(false);
+  const noSrc = !src || src.trim() === "";
 
-  if (error) {
+  if (error || noSrc) {
     return (
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 flex flex-col items-center justify-center text-white p-4 ${wrapperClassName}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center text-white p-4 transition-colors duration-300 ${wrapperClassName}`}
+        style={{
+          background: `linear-gradient(135deg, var(--brand-primary, #0F7A4B), var(--brand-primary-hover, #0D6A41))`,
+        }}
         aria-label={alt}
         role="img"
       >
@@ -67,10 +71,14 @@ export function SafeThumb({
   rounded?: string;
 }) {
   const [error, setError] = useState(false);
+  const noSrc = !src || src.trim() === "";
   return (
     <div className={`relative ${sizeClass} ${rounded} overflow-hidden shrink-0 bg-stone-100`}>
-      {error ? (
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white text-lg">
+      {error || noSrc ? (
+        <div
+          className="absolute inset-0 flex items-center justify-center text-white text-lg transition-colors duration-300"
+          style={{ background: `linear-gradient(135deg, var(--brand-primary, #0F7A4B), var(--brand-primary-hover, #0D6A41))` }}
+        >
           🌿
         </div>
       ) : (
