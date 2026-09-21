@@ -1,24 +1,94 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { categories } from "@/data/articles";
 import { waLink } from "@/lib/constants";
+import { useBrand } from "@/context/BrandContext";
+import BrandSwitcher from "@/components/BrandSwitcher";
 
 export default function Navbar() {
+  const { brand } = useBrand();
   const [open, setOpen] = useState(false);
   const [layananOpen, setLayananOpen] = useState(false);
   const [knowledgeOpen, setKnowledgeOpen] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+
+  // — Hidden easter egg: triple-click within 1.5s —
+  const clickTimes = useRef<number[]>([]);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+    const now = Date.now();
+    clickTimes.current = [...clickTimes.current.filter((t) => now - t < 1500), now];
+    if (clickTimes.current.length >= 3) {
+      e.preventDefault();
+      clickTimes.current = [];
+      setSwitcherOpen(true);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate(20);
+        } catch {}
+      }
+    }
+  };
+
+  const startLongPress = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    longPressTimer.current = setTimeout(() => {
+      setSwitcherOpen(true);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate([30, 20, 30]);
+        } catch {}
+      }
+    }, 1200);
+  };
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-stone-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold text-lg">🌿</div>
-            <div>
-              <div className="font-bold text-stone-900 leading-none tracking-tight">FloraTrade</div>
-              <div className="text-[11px] tracking-[0.18em] text-emerald-700 font-semibold uppercase">Nusantara</div>
+          {/* Logo — hidden brand switcher: triple-click / long-press */}
+          <Link
+            href="/"
+            onClick={handleLogoClick}
+            onPointerDown={startLongPress}
+            onPointerUp={cancelLongPress}
+            onPointerLeave={cancelLongPress}
+            onPointerCancel={cancelLongPress}
+            className="flex items-center gap-3 select-none"
+            aria-label={`${brand.name} — home (hidden brand switcher: triple-click)`}
+          >
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-lg transition-colors duration-300 shrink-0"
+              style={{ backgroundColor: brand.colors.primary }}
+            >
+              {brand.logo.type === "monogram" ? (
+                brand.id === "orchidloka" ? (
+                  <span className="flex flex-col items-center leading-none scale-90">
+                    <span className="w-5 h-3 rounded-t-full border-[1.7px] block" style={{ borderColor: "#fff", borderBottom: "none" }} />
+                    <span className="text-[7px] tracking-[0.18em] font-extrabold mt-[1px]">LOKA</span>
+                  </span>
+                ) : brand.id === "orchidgardenia" ? (
+                  <span className="font-serif italic text-[18px] -mt-0.5">G</span>
+                ) : (
+                  <span>{brand.logo.text}</span>
+                )
+              ) : (
+                <span>{brand.logo.text}</span>
+              )}
+            </div>
+            <div className="transition-colors duration-300">
+              <div className="font-bold text-stone-900 leading-none tracking-tight transition-colors duration-300">{brand.name}</div>
+              <div className="text-[11px] tracking-[0.18em] font-semibold uppercase transition-colors duration-300" style={{ color: brand.colors.primary }}>
+                {brand.tagline}
+              </div>
             </div>
           </Link>
 
@@ -67,7 +137,17 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <a href={waLink("Halo FloraTrade mau konsultasi ekspor flora")} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800 transition shadow-sm">Konsultasi Gratis →</a>
+            <a
+              href={waLink(`Halo ${brand.name} mau konsultasi ekspor flora`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-white text-sm font-semibold transition shadow-sm duration-300 hover:opacity-95"
+              style={{ backgroundColor: brand.colors.primary }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = brand.colors.primaryHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = brand.colors.primary)}
+            >
+              Konsultasi Gratis →
+            </a>
           </div>
 
           {/* Mobile toggle */}
@@ -84,9 +164,18 @@ export default function Navbar() {
           <Link href="/#layanan" onClick={() => setOpen(false)} className="block py-2 font-medium">Layanan</Link>
           <Link href="/pengetahuan" onClick={() => setOpen(false)} className="block py-2 font-medium">Product Knowledge</Link>
           <Link href="/#kontak" onClick={() => setOpen(false)} className="block py-2 font-medium">Kontak</Link>
-          <a href={waLink("Halo FloraTrade mau konsultasi ekspor flora")} target="_blank" rel="noopener noreferrer" className="block text-center mt-3 px-5 py-3 rounded-full bg-emerald-700 text-white font-semibold">Konsultasi Gratis</a>
+          <a
+            href={waLink(`Halo ${brand.name} mau konsultasi ekspor flora`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center mt-3 px-5 py-3 rounded-full text-white font-semibold transition-colors duration-300"
+            style={{ backgroundColor: brand.colors.primary }}
+          >
+            Konsultasi Gratis
+          </a>
         </div>
       )}
+      <BrandSwitcher isOpen={switcherOpen} onClose={() => setSwitcherOpen(false)} />
     </header>
   );
 }
